@@ -1,13 +1,24 @@
 from datetime import date
 import json
 
+def isfloat(x):
+    try:
+        a = float(x)
+    except (TypeError, ValueError):
+        return False
+    else:
+        return True
+
 class Stanje:
     def __init__(self):
         self.semestri = []
         self.aktualni_semester = None
 
     def dodaj_semester(self, semester):
-        self.semestri.append(semester)
+        if semester in self.semestri:
+            raise ValueError("Semester s takšnim imenom že obstaja.")
+        else:
+            self.semestri.append(semester)
         if not self.aktualni_semester:
             self.aktualni_semester = semester
 
@@ -36,8 +47,8 @@ class Stanje:
     @staticmethod
     def iz_slovarja(slovar):
         stanje = Stanje()
-        stanje.semestri = [
-            Semester.iz_slovarja(slovar_predmeta) for slovar_predmeta in slovar["predmeti"]   # to je mal čudno poglej se enkrat
+        stanje.semestri = [             
+            Semester.iz_slovarja(slovar_predmeta) for slovar_predmeta in slovar["Semestri"]
         ]
         if slovar["Aktualni semester"] is not None:
             stanje.aktualni_semester = stanje.semestri[slovar["Aktualni semester"]]
@@ -70,8 +81,11 @@ class Semester:
         self.predmeti = []
     
     def dodaj_predmet(self, predmet):
-        self.predmeti.append(predmet)
-    
+        if predmet in self.predmeti:
+            raise ValueError("Predmet s takšnim imenom že obstaja.")
+        else:
+            self.predmeti.append(predmet)
+
     def pobrisi_predmet(self, predmet):
         self.predmeti.remove(predmet)
     
@@ -106,7 +120,7 @@ class Predmet:
         self.ocene = []
         self.opravljen = opravljen   
     
-    def dodaj_izpitni_rok(self, izpitni_rok):
+    def dodaj_izpitni_rok(self, izpitni_rok):   # dodaj pogoj, da je vneseni datum res datum
         self.izpitni_roki.append(izpitni_rok)
 
     def izbrisi_izpitni_rok(self, izpitni_rok):
@@ -129,7 +143,10 @@ class Predmet:
                 return izpitni_rok
 
     def dodaj_oceno(self, ocena):
-        self.ocene.append(ocena)
+        if not isfloat(ocena) or ocena > 10 or ocena < 1:
+            ValueError("Ocena mora biti število med 1 in 10")
+        else:
+            self.ocene.append(ocena)
 
     def izbrisi_oceno(self, ocena):
         self.ocene.remove(ocena)
@@ -156,6 +173,7 @@ class Predmet:
         predmet.ocene = [
             Ocena.iz_slovarja(slovar_ocen) for slovar_ocen in slovar["Ocene"]
         ]
+        return predmet
 
 class Izpitni_rok:
 
@@ -171,16 +189,17 @@ class Izpitni_rok:
 
     def v_slovar(self):
         return {
-            "ime": self.ime,
-            "datum": date.isoformat(self.datum)
+            "Ime": self.ime,
+            "Datum": self.datum
         }
     
     @staticmethod
     def iz_slovarja(slovar):
         return Izpitni_rok(
-            slovar["ime"],
-            date.fromisoformat(slovar["datum"])
+            slovar["Ime"],
+            slovar["Datum"]
         )
+        
 
 class Ocena:
 
