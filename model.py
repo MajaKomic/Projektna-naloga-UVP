@@ -11,15 +11,18 @@ class Stanje:
         if not self.aktualni_semester:
             self.aktualni_semester = semester
 
-    def pobrisi_semester(self, semester):
-        self.semestri.remuve(semester)
+    def zamenjaj_ak_semester(self, semester):
+        self.aktualni_semester = semester
 
-    def pobrisi_predmet(self, predmet):
-        self.aktualni_semester.izbrisi_predmet(predmet)
+    def pobrisi_semester(self, semester):
+        self.semestri.remove(semester)
 
     def dodaj_predmet(self, predmet):
-        self.aktualni_semester.dodaj_predmet(predmet)
-    
+            self.aktualni_semester.dodaj_predmet(predmet)
+
+    def pobrisi_predmet(self, predmet):
+        self.aktualni_semester.pobrisi_predmet(predmet)
+
     def stevilo_neopravljenih_predmetov(self):
         return sum([semester.stevilo_neopravljenih_predmetov() for semester in self.semestri])
 
@@ -34,10 +37,10 @@ class Stanje:
     def iz_slovarja(slovar):
         stanje = Stanje()
         stanje.semestri = [
-            Semester.iz_slovarja(slovar_predmeta) for slovar_predmeta in slovar['predmeti']   # to je mal čudno poglej se enkrat
+            Semester.iz_slovarja(slovar_predmeta) for slovar_predmeta in slovar["predmeti"]   # to je mal čudno poglej se enkrat
         ]
-        if slovar["Aktualni semester":] is not None:
-            stanje.aktualni_semester = stanje.semestri[slovar["Aktualni semester":]]
+        if slovar["Aktualni semester"] is not None:
+            stanje.aktualni_semester = stanje.semestri[slovar["Aktualni semester"]]
         return stanje
 
     def shrani_v_datoteko(self, ime_datoteke):
@@ -54,10 +57,10 @@ class Stanje:
     def preveri_podatke_novega_semestra(self, ime):
         napake = {}
         if not ime:
-            napake['ime'] = 'Ime semestra mora biti neprazno.'
+            napake["ime"] = "Ime semestra mora biti neprazno."
         for semester in self.semestri:
-            if semester.ime == ime:
-                napake['ime'] == 'Ime je že zasedeno.'
+            if semester.ime_semestra == ime:
+                napake["ime"] == "Ime je že zasedeno."
         return napake
 
 
@@ -69,12 +72,15 @@ class Semester:
     def dodaj_predmet(self, predmet):
         self.predmeti.append(predmet)
     
+    def pobrisi_predmet(self, predmet):
+        self.predmeti.remove(predmet)
+    
     def stevilo_neopravljenih_predmetov(self):
         stevilo = 0
         for predmet in self.predmeti:
-            if not predmet.opravljen:       #nikjer nisem definirala funkcije opravljeno
+            if not predmet.opravljen:       
                 stevilo += 1
-            return stevilo
+        return stevilo
 
     def v_slovar(self):
         return {
@@ -84,7 +90,7 @@ class Semester:
    
     @staticmethod
     def iz_slovarja(slovar):
-        semester = Semester(slovar['ime'])
+        semester = Semester(slovar["Semester"])
         semester.predmet = [
             Predmet.iz_slovarja(slovar_predmetov) for slovar_predmetov in slovar["Predmeti"]
         ]
@@ -111,16 +117,16 @@ class Predmet:
         if self.izpitni_roki == []:
             return None
         for izpitni_rok in self.izpitni_roki:
-            if izpitni_rok < date.today():
+            if self.izpitni_roki.je_pretecen():
                 pretekli.append(izpitni_rok)
         return pretekli
 
     def naslednji_izpitni_rok(self):
-        pretekli = preteceni_izpitni_roki()
-        if self.izpitni_roki[0] in pretekli:
-            self.izpitni_roki.remuve(self.izpitni_roki[0])
-        else:
-            return self.izpitni_roki[0]
+        if self.izpitni_roki == []:
+            return None
+        for izpitni_rok in self.izpitni_roki:
+            if not self.izpitni_roki.je_pretecen():
+                return izpitni_rok
 
     def dodaj_oceno(self, ocena):
         self.ocene.append(ocena)
@@ -136,29 +142,61 @@ class Predmet:
             "Predmet": self.ime_predmeta,
             "Informacije o predmetu": self.opis,
             "Kreditne točke": self.kreditne_tocke,
-            #napiše najbližji/nasledji izpitni rok
-            "ocena": self.ocene,
+            "Izpitni roki": [izpitni_rok.v_slovar() for izpitni_rok in self.izpitni_roki],
+            "Ocene": [ocena.v_slovar() for ocena in self.ocene],
             "Predmet opravljen": self.opravljen
         }
 
     @staticmethod
     def iz_slovarja(slovar):
-        return Predmet(slovar["Predmet"], slovar["Informacije o predmetu"], slovar["Kreditne točke"], slovar["ocena"], slovar["Predmet opravljen"])    
+        predmet = Predmet(slovar["Predmet"], slovar["Informacije o predmetu"], slovar["Informacije o predmetu"], slovar["Predmet opravljen"])         
+        predmet.izpitni_roki = [
+            Izpitni_rok.iz_slovarja(slovar_izp) for slovar_izp in slovar["Izpitni roki"]
+        ]
+        predmet.ocene = [
+            Ocena.iz_slovarja(slovar_ocen) for slovar_ocen in slovar["Ocene"]
+        ]
 
+class Izpitni_rok:
 
-class Izpitni_roki:
-    def __init__(self, kolokvij1, kolokvij2, izpitni_rok1, izpitni_rok2, izpitni_rok3):
-        self.kolokvij1 = kolokvij1
-        self.kolokvij2 = kolokvij2
-        self.izpitni_rok1 = izpitni_rok1
-        self.izpitni_rok2 = izpitni_rok2
-        self.izpitni_rok3 = izpitni_rok3
+    def __init__(self, ime, datum):
+        self.ime = ime
+        self.datum = datum
+    
+    def je_pretecen(self):
+        if self.datum < date.today:
+            return True
+        else:
+            return False
 
     def v_slovar(self):
         return {
-            "1. kolokvij": self.kolokvij1,
-            "2. kolokvij": self.kolokvij2,
-            "1. izpitni rok": self.izpitni_rok1,
-            "2. izpitni rok": self.izpitni_rok2,
-            "3. izpitni rok": self.izpitni_rok3
+            "ime": self.ime,
+            "datum": date.isoformat(self.datum)
         }
+    
+    @staticmethod
+    def iz_slovarja(slovar):
+        return Izpitni_rok(
+            slovar["ime"],
+            date.fromisoformat(slovar["datum"])
+        )
+
+class Ocena:
+
+    def __init__(self, ime, ocena):
+        self.ime = ime
+        self.ocena = ocena
+    
+    def v_slovar(self):
+        return {
+            "ime": self.ime,
+            "ocena": self.ocena
+        }
+    
+    @staticmethod
+    def iz_slovarja(slovar):
+        return Ocena(
+            slovar["ime"],
+            slovar["ocena"]
+        )
