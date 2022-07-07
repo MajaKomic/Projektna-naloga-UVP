@@ -4,7 +4,9 @@ from model import Stanje, Semester, Predmet, Izpitni_rok, Ocena
 IME_DATOTEKE = "stanje.json"   
 try:
     moje_stanje = Stanje.preberi_iz_datoteke(IME_DATOTEKE)
-except FileNotFoundError:
+except ValueError:   
+    #prej je delalo z FileNotFoundError zdej pa dela, 
+    #to sm pogooglala pa sem dobile na https://stackoverflow.com/questions/8381193/handle-json-decode-error-when-nothing-returned (nevem zakaj)
     moje_stanje = Stanje(semestri=[])
 
 DODAJ_SEMESTER = 1
