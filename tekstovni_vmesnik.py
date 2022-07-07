@@ -15,7 +15,7 @@ DODAJ_IZPITNI_ROK = 5
 POBRISI_IZPITNI_ROK = 6
 DODAJ_OCENO = 7
 POBRISI_OCENO = 8
-IZHOD = 10
+IZHOD = 9
 
 def preberi_stevilo():
     while True:
@@ -92,10 +92,15 @@ def izberi_oceno(predmet):
     )
 
 def trenutno_stanje():
+    print("Vaše trenutno stanje:")
     for semester in moje_stanje.semestri:
         print(f"{prikaz_semestra(semester)}")
         for predmet in semester.predmeti:
             print(f"    {prikaz_predmeta(predmet)}")
+            for izpitni_rok in predmet.izpitni_roki:
+                print(f"        {prikaz_izpitnega_roka(izpitni_rok)}")
+            #for ocena in predmet.ocena:
+            #    print(f"    {prikaz_ocene(ocena)}")
     if not moje_stanje.semestri:
         print("Trenutno nimate še nobenega semestra, prosimo ustvarite enega.")
 
@@ -105,57 +110,108 @@ def dodaj_semester():
     moje_stanje.dodaj_semester(nov)
 
 def pobrisi_semester():
-    semester = izberi_semester(moje_stanje)
-    moje_stanje.pobrisi_semester(semester)
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        moje_stanje.pobrisi_semester(semester)
 
 def dodaj_predmet():
-    semester = izberi_semester(moje_stanje)
-    print("Vnesite podatke o predmetu.")
-    ime = input("Ime> ")
-    opis = input("Opis> ")
-    kreditne_tocke = input("Krednitne točke> ")
-    nov_predmet = Predmet(ime, opis, kreditne_tocke, [], [])
-    semester.dodaj_predmet(nov_predmet)
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        print("Vnesite podatke o predmetu.")
+        ime = input("Ime> ")
+        opis = input("Opis> ")
+        kreditne_tocke = input("Krednitne točke> ")
+        nov_predmet = Predmet(ime, opis, kreditne_tocke, [], [])
+        semester.dodaj_predmet(nov_predmet)
 
 def pobrisi_predmet():
-    predmet = izberi_semester(moje_stanje)
-    moje_stanje.pobrisi_predmet(predmet)
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        if not semester.predmeti:
+            return print("V tem semestru nimate nobenega predmeta zato dodajte enega.")
+        else:
+            predmet = izberi_predmet(semester)
+            semester.pobrisi_predmet(predmet)
 
 def opravljen_predmet():
-    semester = izberi_semester(moje_stanje)
-    predmet = izberi_predmet(semester)
-    predmet.opravil_predmet()
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        if not semester.predmeti:
+            return print("V tem semestru nimate nobenega predmeta zato dodajte enega.")
+        else:
+            predmet = izberi_predmet(semester)
+            predmet.opravil_predmet()
 
 def dodaj_izpitni_rok():
-    semester = izberi_semester(moje_stanje)
-    predmet = izberi_predmet(semester)
-    ime = input("Ime> ")
-    datum = input("Datum (YYYY-MM-DD)> ")
-    if datum.strip():
-        datum = date.fromisoformat(datum)
-    else: 
-        datum = None
-    izp_rok = Izpitni_rok(ime, datum)
-    predmet.dodaj_izpitni_rok(izp_rok)
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        if not semester.predmeti:
+            return print("V tem semestru nimate nobenega predmeta zato dodajte enega.")
+        else:
+            predmet = izberi_predmet(semester)
+            print("Vnesite podatke o izpitnem roku.")
+            ime = input("Ime> ")
+            datum = input("Datum (YYYY-MM-DD)> ")
+            if datum.strip():
+                datum = date.fromisoformat(datum)
+            else: 
+                datum = None
+            izp_rok = Izpitni_rok(ime, datum)
+            predmet.dodaj_izpitni_rok(izp_rok)
  
 def pobrisi_izpitni_rok():
-    semester = izberi_semester(moje_stanje)
-    predmet = izberi_predmet(semester)
-    izpitni_rok = izberi_izpitni_rok(predmet)
-    predmet.pobrisi_izpitni_rok(izpitni_rok)
- 
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        if not semester.predmeti:
+            return print("V tem semestru nimate nobenega predmeta zato dodajte enega.")
+        else:
+            predmet = izberi_predmet(semester)
+            if not predmet.izpitni_roki:
+                return print("Pri tem predmetu nimate nobenega izpitnega roka, zato dodajte enega.")
+            else:
+                izpitni_rok = izberi_izpitni_rok(predmet)
+                predmet.pobrisi_izpitni_rok(izpitni_rok)
+
 def dodaj_oceno():
-    semester = izberi_semester(moje_stanje)
-    predmet = izberi_predmet(semester)
-    ime = input("Ime> ")
-    ocena = input("Ocena> ")
-    predmet.dodaj_oceno(Ocena(ime, ocena))
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        if not semester.predmeti:
+            return print("V tem semestru nimate nobenega predmeta zato dodajte enega.")
+        else:
+            predmet = izberi_predmet(semester)
+            print("Vnesite podatke o oceni.")
+            ime = input("Ime> ")
+            ocena = input("Ocena> ")
+            predmet.dodaj_oceno(Ocena(ime, ocena))
 
 def pobrisi_oceno():
-    semester = izberi_semester(moje_stanje)
-    predmet = izberi_predmet(semester)
-    ocena = izberi_oceno(predmet)
-    predmet.pobrisi_oceno(ocena)
+    if not moje_stanje.semestri:
+        return print("Nimate nobenega semestra zato dodajte enega.")
+    else:
+        semester = izberi_semester(moje_stanje)
+        if not semester.predmeti:
+            return print("V tem semestru nimate nobenega predmeta zato dodajte enega.")
+        else:
+            predmet = izberi_predmet(semester)
+            if not predmet.ocene:
+                return print("Pri tem predmetu nimate nobene ocene, zato dodajte eno.")
+            else:
+                ocena = izberi_oceno(predmet)
+                predmet.pobrisi_oceno(ocena)
 
 # TEKSTOVNI UMESNIK
 def tekstovni_vmesnik():
@@ -164,8 +220,8 @@ def tekstovni_vmesnik():
         trenutno_stanje()
         ukaz = izberi_moznost(
             [
-                (DODAJ_PREDMET, "dodaj nov predmet"),
-                (POBRISI_PREDMET, "pobriši predmet"),
+                (DODAJ_SEMESTER, "dodaj nov semester"),
+                (POBRISI_SEMESTER, "pobriši semester"),
                 (DODAJ_PREDMET, "dodaj nov predmet"),
                 (POBRISI_PREDMET, "pobrisi predmet"),
                 (DODAJ_IZPITNI_ROK, "dodaj nov izpitni rok"),
@@ -175,10 +231,10 @@ def tekstovni_vmesnik():
                 (IZHOD, "zapri program")
             ]
         )
-        if ukaz == DODAJ_PREDMET:
-            dodaj_predmet()
-        elif ukaz == POBRISI_PREDMET:
-            pobrisi_predmet()
+        if ukaz == DODAJ_SEMESTER:
+            dodaj_semester()
+        elif ukaz == POBRISI_SEMESTER:
+            pobrisi_semester()
         elif ukaz == DODAJ_PREDMET:
             dodaj_predmet()
         elif ukaz == POBRISI_PREDMET:
