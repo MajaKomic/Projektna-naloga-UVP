@@ -53,7 +53,7 @@ class Stanje:
             napake["ime"] = "Ime semestra mora biti neprazno."
         for semester in self.semestri:
             if semester.ime_semestra == ime:
-                napake["ime"] == "Ime je že zasedeno."
+                napake["ime"] = "Ime je že zasedeno."
         return napake
 
 
@@ -94,6 +94,14 @@ class Semester:
             ]
         )
 
+    def preveri_podatke_novega_predmeta(self, ime):
+        napake = {}
+        if not ime:
+            napake["ime"] = "Ime predmeta mora biti neprazno."
+        for semester in self.predmeti:
+            if semester.ime_predmeta == ime:
+                napake["ime"] = "Ime je že zasedeno."
+        return napake
 
 class Predmet:
     def __init__(self, ime_predmeta, opis, kreditne_tocke, izpitni_roki, ocene, opravljen=False):
