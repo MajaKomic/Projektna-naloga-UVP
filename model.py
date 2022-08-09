@@ -104,44 +104,33 @@ class Semester:
         return napake
 
 class Predmet:
-    def __init__(self, ime_predmeta, opis, kreditne_tocke, izpitni_roki, ocene, opravljen=False):
+    def __init__(self, ime_predmeta, predavatelj, asistent, kreditne_tocke,  ocena_vaj, ocena_teo, opravljen=False):
         self.ime_predmeta = ime_predmeta
-        self.opis = opis
+        self.predavatelj = predavatelj
+        self.asistent = asistent
         self.kreditne_tocke = kreditne_tocke
-        self.izpitni_roki = izpitni_roki
-        self.ocene = ocene
+        self.ocena_vaj = ocena_vaj
+        self.ocena_teo = ocena_teo
         self.opravljen = opravljen   
-    
-    def dodaj_izpitni_rok(self, izpitni_rok):   # dodaj pogoj, da je vneseni datum res datum
-        if izpitni_rok in self.izpitni_roki:
-            raise ValueError("Izpitni rok s takšnim imenom že obstaja.")
-        else:
-            self.izpitni_roki.append(izpitni_rok)
-
-    def pobrisi_izpitni_rok(self, izpitni_rok):
-        self.izpitni_roki.remove(izpitni_rok)
-
-    def dodaj_oceno(self, ocena):
-        if not isfloat(ocena) or ocena > 10 or ocena < 1:
-            ValueError("Ocena mora biti število med 1 in 10")
-        elif ocena in self.ocene:
-            raise ValueError("Ocena s takšnim imenom že obstaja.")
-        else:
-            self.ocene.append(ocena)
-
-    def pobrisi_oceno(self, ocena):
-        self.ocene.remove(ocena)
 
     def opravil_predmet(self):
         self.opravljen = True
+    
+    def je_ocena(ocena):
+        ocena = int(ocena)
+        if ocena >= 1 and ocena <= 10:
+            return True
+        else:
+            return False
 
     def v_slovar(self):
         return {
             "Predmet": self.ime_predmeta,
-            "Informacije o predmetu": self.opis,
+            "Predavatelj": self.predavatelj,
+            "Asistent": self.asistent,
             "Kreditne točke": self.kreditne_tocke,
-            "Izpitni roki": [izpitni_rok.v_slovar() for izpitni_rok in self.izpitni_roki],
-            "Ocene": [ocena.v_slovar() for ocena in self.ocene],
+            "Ocena iz vaj": self.ocena_vaj,
+            "Ocena iz teorije": self.ocena_teo,
             "Predmet opravljen": self.opravljen
         }
 
@@ -149,60 +138,10 @@ class Predmet:
     def iz_slovarja(slovar):
         return Predmet(
             slovar["Predmet"], 
-            slovar["Informacije o predmetu"], 
+            slovar["Predavatelj"], 
+            slovar["Asistent"],
             slovar["Kreditne točke"],        
-            [
-                Izpitni_rok.iz_slovarja(slovar_izp) 
-                for slovar_izp in slovar["Izpitni roki"]
-            ],
-            [
-                Ocena.iz_slovarja(slovar_ocen) 
-                for slovar_ocen in slovar["Ocene"]
-            ],
+            slovar["Ocena iz vaj"],
+            slovar["Ocena iz teorije"],
             slovar["Predmet opravljen"]
         )
-
-class Izpitni_rok:
-
-    def __init__(self, ime, datum):
-        self.ime = ime
-        self.datum = datum
-    
-    def je_pretecen(self):
-        if self.datum < date.today:
-            return True
-        else:
-            return False
-
-    def v_slovar(self):
-        return {
-            "Ime": self.ime,
-            "Datum": self.datum
-        }
-    
-    @staticmethod
-    def iz_slovarja(slovar):
-        return Izpitni_rok(
-            slovar["Ime"],
-            slovar["Datum"]
-        )
-        
-
-class Ocena:
-
-    def __init__(self, ime, ocena):
-        self.ime = ime
-        self.ocena = ocena
-    
-    def v_slovar(self):
-        return {
-            "ime": self.ime,
-            "ocena": self.ocena
-        }
-    
-    @staticmethod
-    def iz_slovarja(slovar):
-        return Ocena(
-            slovar["ime"],
-            slovar["ocena"]
-        ) 
