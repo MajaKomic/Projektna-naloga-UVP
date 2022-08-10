@@ -1,0 +1,42 @@
+{
+    "Semestri": [
+        {
+            "Semester": "1.semester 2021/22",
+            "Predmeti": [
+                {
+                    "Predmet": "Analiza 3",
+                    "Predavatelj": "Miran Černe",
+                    "Asistent": "Blaž Jelenc",
+                    "Kreditne točke": "6",
+                    "Ocena iz vaj": "6",
+                    "Ocena iz teorije": "6",
+                    "Predmet opravljen": "True"
+                },
+                {
+                    "Predmet": "Analiza podatkov s programom R",
+                    "Predavatelj": "Ljubčo Todorovski",
+                    "Asistent": "Katarina Brilej",
+                    "Kreditne točke": "6",
+                    "Ocena iz vaj": "8",
+                    "Ocena iz teorije": "9",
+                    "Predmet opravljen": "True"
+                }    
+            ]
+        },
+        {
+            "Semester": "2.semester 2021/22",
+            "Predmeti": 
+            [
+                {
+                    "Predmet": "Uvod v programiranje",
+                    "Predavatelj": "Matija Pretnar",
+                    "Asistent": "Ajda Lampič",
+                    "Kreditne točke": "6",
+                    "Ocena iz vaj": "7",
+                    "Ocena iz teorije": "",
+                    "Predmet opravljen": "False" 
+                }
+            ]
+        }
+    ]
+}

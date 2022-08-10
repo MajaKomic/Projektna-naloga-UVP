@@ -1,17 +1,20 @@
 import bottle
-from model import Stanje
+from model import Stanje, Semester, Predmet
 
-IME_DATOTEKE = "stanje.json"
+IME_DATOTEKE = "primer_stanja.json"
 try:
     moje_stanje = Stanje.preberi_iz_datoteke(IME_DATOTEKE)
 except FileNotFoundError:
-    moje_stanje = Stanje()
+    moje_stanje = Stanje(semestri=[])
 #except ValueError:
 #    moje_stanje = Stanje(semestri=[])
 
 @bottle.get("/")
 def osnovna_stran():
-    return bottle.template('osnovna_stran.tpl')
+    return bottle.template(
+        'osnovna_stran.tpl',
+        semestri=moje_stanje.semestri
+        )
 
 @bottle.error(404)
 def error_404(error):
