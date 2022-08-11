@@ -1,21 +1,30 @@
 % rebase('osnova.tpl')
 <!-- Main container -->
-<nav class="level">
-    <div class="level-left">
-        <div class="buttons has-addons field is-horizontal">
-            % for id_semestra, semester in enumerate(semestri):
-            <a href="/semester/{{id_semestra}}/" class="button" name="id_semestra" value="{{id_semestra}}">
+
+<div><strong>Pozdravljeni, tukaj je seznam vaših semestrov:</strong></div>
+
+<table class="table is-hoverable">
+    % for id_semestra, semester in enumerate(semestri):
+    <tr>
+        <td>
+            <a href="/semester/{{id_semestra}}/" class="button is-primary" name="id_semestra" value="{{id_semestra}}">
                 {{semester.ime_semestra}}
             </a>
-            % end
+        </td>
+        <td>
+            <form method="POST" action="/pobrisi-semester/{{id_semestra}}/">
+                <button class="button is-danger is-light">X</button>
+            </form>
+        </td>
+    </tr>
+    % end
+</table>
+
+<div></div>
+
+<div class="level-left">
+        <div class="level-item">
+            <a class="button is-info" href="/dodaj-semester/">dodaj semester</a>
         </div>
-
-    </div>
-
-    <div class="level-right">
-            <div class="level-item">
-                <a class="button is-info" href="/dodaj-semester/">dodaj semester</a>
-            </div>
-        </form>
-    </div>
-</nav>
+    </form>
+</div>

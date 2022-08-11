@@ -10,11 +10,29 @@
 </head>
 
 <body>
-    <strong>Redovalnica</strong>
 
+<section class="hero is-small">
+    <div class="hero-body">
+      <p class="title">
+        Redovalnica
+      </p>
+      <p class="subtitle">
+        napisala Maja Komic
+      </p>
+    </div>
+  </section>
+  
     <section class="section">
         {{!base}}
     </section>
 </body>
+
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p>
+      <strong>Redovalnica</strong> by <a href="https://github.com/MajaKomic/Projektna-naloga-UVP">Maja Komic</a>.
+    </p>
+  </div>
+</footer>
 
 </html>
