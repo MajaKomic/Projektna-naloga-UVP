@@ -1,18 +1,18 @@
 import bottle
 from model import Stanje, Semester, Predmet
 
-IME_DATOTEKE = "stanje.json"
-try:
-    moje_stanje = Stanje.preberi_iz_datoteke(IME_DATOTEKE)
-except FileNotFoundError:
-    moje_stanje = Stanje(semestri=[])
+IME_DATOTEKE = "primer_stanja.json"
+#try:
+moje_stanje = Stanje.preberi_iz_datoteke(IME_DATOTEKE)
+#except FileNotFoundError:
+#    moje_stanje = Stanje(semestri=[])
 #except ValueError:
 #    moje_stanje = Stanje(semestri=[])
 
 def url_semestra(id_semestra):
     return f"/semester/{id_semestra}/"
 
-    
+
 @bottle.get("/")
 def osnovna_stran():
     return bottle.template(
@@ -20,6 +20,13 @@ def osnovna_stran():
         semestri=moje_stanje.semestri
         )
 
+@bottle.post("/pobrisi-semester/<id_semestra:int>/")
+def pobrisi_semester(id_semestra):
+    #stanje = stanje_trenutnega_uporabnika()
+    semester = moje_stanje.semestri[id_semestra]
+    moje_stanje.pobrisi_semester(semester)
+    #shrani_stanje_trenutnega_uporabnika(stanje)
+    bottle.redirect("/")
 
 @bottle.get("/semester/<id_semestra:int>/")
 def prikazi_semester(id_semestra):
@@ -31,7 +38,6 @@ def prikazi_semester(id_semestra):
         aktualni_semester=semester,
         id_aktualni_semester=id_semestra,
     )
-
 
 @bottle.get("/dodaj-semester/")
 def dodaj_semester_get():
@@ -49,10 +55,42 @@ def dodaj_semester_post():
         polja = {"ime": ime}
         return bottle.template("dodaj_semester.tpl", napake=napake, polja=polja)
     else:
-        id_semestra = moje_stanje.dodaj_semester(semester)
+        moje_stanje.dodaj_semester(semester)
         #shrani_stanje_trenutnega_uporabnika(stanje)
-        bottle.redirect(url_semestra(id_semestra))
+        bottle.redirect("/")
 
+
+@bottle.get("/dodaj-predmet/<id_semestra:int>/")
+def dodaj_predmet_get(id_semestra):
+    return bottle.template(
+        "dodaj_predmet.tpl", 
+        id_semestra=id_semestra
+    )
+
+
+@bottle.post("/dodaj-predmet/<id_semestra:int>/")
+def dodaj_predmet_post(id_semestra):
+    #stanje = stanje_trenutnega_uporabnika()
+    semester = moje_stanje.semestri[id_semestra]
+    ime_predmeta = bottle.request.forms.getunicode("ime_predmeta")
+    predavatelj = bottle.request.forms.getunicode("predavatelj")
+    asistent = bottle.request.forms.getunicode("asistent")
+    kreditne_tocke = bottle.request.forms.getunicode("kreditne_tocke")
+    ocena_vaj = bottle.request.forms.getunicode("ocena_vaj")
+    ocena_teo = bottle.request.forms.getunicode("ocena_teo")   
+    predmet = Predmet(ime_predmeta, predavatelj, asistent, kreditne_tocke,  ocena_vaj, ocena_teo)
+    semester.dodaj_predmet(predmet)
+    #shrani_stanje_trenutnega_uporabnika(stanje)
+    bottle.redirect(url_semestra(id_semestra))
+
+@bottle.post("/pobrisi-predmet/<id_semestra:int>/<id_predmeta:int>/")
+def pobrisi_predmet(id_semestra, id_predmeta):
+    #stanje = stanje_trenutnega_uporabnika()
+    semester = moje_stanje.semestri[id_semestra]
+    predmet = semester.predmeti[id_predmeta]
+    semester.pobrisi_predmet(predmet)
+    #shrani_stanje_trenutnega_uporabnika(stanje)
+    bottle.redirect(url_semestra(id_semestra))
 
 @bottle.error(404)
 def error_404(error):
