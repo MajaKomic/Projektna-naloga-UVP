@@ -70,12 +70,40 @@ class Semester:
 
     def pobrisi_predmet(self, predmet):
         self.predmeti.remove(predmet)
+    
+    def povprecna_ocena(self, katera):
+        stevilo = 0
+        vsota = 0
+        for predmet in self.predmeti:
+            ocena_vaj = predmet.ocena_vaj
+            ocena_teo = predmet.ocena_teo
+            if ocena_vaj != '':
+                ocena_vaj = int(predmet.ocena_vaj)
+            elif ocena_teo != '':
+                ocena_teo = int(predmet.ocena_teo)
+            else:
+                ocena_vaj = 0
+                ocena_teo = 0
+            if katera == "povp_vaj":
+                stevilo += 1
+                vsota += ocena_vaj 
+            elif katera == "povp_teo":
+                stevilo += 1
+                vsota += ocena_teo
+            else:
+                stevilo += 2
+                vsota += ocena_vaj
+                vsota += ocena_teo
+        return vsota / stevilo
 
-    def stevilo_neopravljenih_predmetov(self):
+    def stevilo_kreditnih_tock(self):
         stevilo = 0
         for predmet in self.predmeti:
-            if not predmet.opravljen:       
-                stevilo += 1
+            kreditne = int(predmet.kreditne_tocke)
+            if kreditne == None:
+                kreditne = 0
+            else:
+                stevilo += kreditne
         return stevilo
 
     def v_slovar(self):
