@@ -10,21 +10,28 @@
 </head>
 
 <body>
-
-<section class="hero is-small">
+  <section class="hero is-small">
     <div class="hero-body">
       <p class="title">
         Redovalnica
       </p>
       <p class="subtitle">
-        napisala Maja Komic
+          <nav class="right">
+    <div class="level-right">
+        <a class="button is-primary" href="/prijava/">
+          <strong>Prijavi se</strong>
+        </a>
+        <form method="POST" action="/odjava/">
+          <button class="button is-light">Odjavi se</button>
+        </form>
+    </div>
+  </nav>
       </p>
     </div>
   </section>
-  
-    <section class="section">
-        {{!base}}
-    </section>
+  <section class="section">
+    {{!base}}
+  </section>
 </body>
 
 <footer class="footer">

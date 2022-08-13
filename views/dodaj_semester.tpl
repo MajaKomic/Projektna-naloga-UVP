@@ -1,7 +1,7 @@
 % rebase('osnova.tpl')
 <form method="POST">
     <div class="field">
-        <label class="label">Ime</label>
+        <label class="label">Vpišite podatke o novem semestru:</label>
         <div class="control has-icons-left has-icons-right">
             <input class="input" name="ime" type="text" placeholder="ime semestra" value="{{polja.get('ime', '')}}">
             <span class="icon is-small is-left">

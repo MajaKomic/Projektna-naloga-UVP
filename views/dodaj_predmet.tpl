@@ -1,4 +1,5 @@
 % rebase('osnova.tpl')
+<label class="label">Vpišite podatke o novem predmetu:</label>
 <table class="table is-hoverable is-fullwidth">
     <thead>
         <tr>
