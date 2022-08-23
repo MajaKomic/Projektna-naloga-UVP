@@ -5,8 +5,8 @@
             "Predmeti": [
                 {
                     "Predmet": "Analiza 3",
-                    "Predavatelj": "Miran Černe",
-                    "Asistent": "Blaž Jelenc",
+                    "Predavatelj": "",
+                    "Asistent": "",
                     "Kreditne točke": "6",
                     "Ocena iz vaj": "6",
                     "Ocena iz teorije": "6",
@@ -14,8 +14,8 @@
                 },
                 {
                     "Predmet": "Analiza podatkov s programom R",
-                    "Predavatelj": "Ljubčo Todorovski",
-                    "Asistent": "Katarina Brilej",
+                    "Predavatelj": "",
+                    "Asistent": "",
                     "Kreditne točke": "6",
                     "Ocena iz vaj": "8",
                     "Ocena iz teorije": "9",
@@ -29,8 +29,8 @@
             [
                 {
                     "Predmet": "Uvod v programiranje",
-                    "Predavatelj": "Matija Pretnar",
-                    "Asistent": "Ajda Lampič",
+                    "Predavatelj": "",
+                    "Asistent": "",
                     "Kreditne točke": "6",
                     "Ocena iz vaj": "7",
                     "Ocena iz teorije": "",
