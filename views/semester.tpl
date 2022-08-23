@@ -73,33 +73,36 @@
     </form>
 </div>
 
-<div class="level-right">
-<table class="table is-hoverable">
-    <tbody>
-        <tr>
-            <td><strong>Povprečna ocena vaj</strong></td>
-            <td>{{aktualni_semester.povprecna_ocena("povp_vaj")}}</td>
-            <td<</td>
-        </tr>
-        <tr>
-            <td><strong>Povprečna ocena teorije</strong></td>
-            <td>{{aktualni_semester.povprecna_ocena("povp_teo")}}</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><strong>Povprečna ocena</strong></td>
-            <td>{{aktualni_semester.povprecna_ocena("povp")}}</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><strong>Skupno število kretivnih točk</strong></td>
-            <td>{{aktualni_semester.stevilo_kreditnih_tock()}}</td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
-</div>
-
+    % if aktualni_semester.predmeti != []:
+        <div class="level-right">
+        <table class="table is-hoverable">
+            <tbody>
+                <tr>
+                    <td><strong>Povprečna ocena vaj</strong></td>
+                    <td>{{aktualni_semester.povprecna_ocena("povp_vaj")}}</td>
+                    <td<</td>
+                </tr>
+                <tr>
+                    <td><strong>Povprečna ocena teorije</strong></td>
+                    <td>{{aktualni_semester.povprecna_ocena("povp_teo")}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><strong>Povprečna ocena</strong></td>
+                    <td>{{aktualni_semester.povprecna_ocena("povp")}}</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><strong>Skupno število kretivnih točk</strong></td>
+                    <td>{{aktualni_semester.stevilo_kreditnih_tock()}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    % end
+    
 % else:
 
 <p>Nimate še nobenega semestra. <a href="/dodaj-semester/">Dodajte ga!</a></p>
+% end

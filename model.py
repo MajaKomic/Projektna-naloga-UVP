@@ -3,7 +3,7 @@ import json
 
 def isfloat(x):
     try:
-        a = float(x)
+        x = float(x)
     except (TypeError, ValueError):
         return False
     else:
@@ -75,25 +75,23 @@ class Semester:
         stevilo = 0
         vsota = 0
         for predmet in self.predmeti:
-            ocena_vaj = predmet.ocena_vaj
-            ocena_teo = predmet.ocena_teo
-            if ocena_vaj != '':
-                ocena_vaj = int(predmet.ocena_vaj)
-            elif ocena_teo != '':
-                ocena_teo = int(predmet.ocena_teo)
-            else:
-                ocena_vaj = 0
-                ocena_teo = 0
             if katera == "povp_vaj":
-                stevilo += 1
-                vsota += ocena_vaj 
+                if predmet.ocena_vaj != '':
+                    stevilo += 1
+                    vsota += int(predmet.ocena_vaj)
             elif katera == "povp_teo":
-                stevilo += 1
-                vsota += ocena_teo
+                if predmet.ocena_teo != '':
+                    stevilo += 1
+                    vsota += int(predmet.ocena_teo)
             else:
-                stevilo += 2
-                vsota += ocena_vaj
-                vsota += ocena_teo
+                if predmet.ocena_vaj != '':
+                    stevilo += 1
+                    vsota += int(predmet.ocena_vaj)
+                elif predmet.ocena_teo != '':
+                    stevilo += 1
+                    vsota += int(predmet.ocena_teo)
+        if stevilo == 0:
+            return 0
         return vsota / stevilo
 
     def stevilo_kreditnih_tock(self):
@@ -104,6 +102,8 @@ class Semester:
                 kreditne = 0
             else:
                 stevilo += kreditne
+        if stevilo == 0:
+            return 0
         return stevilo
 
     def v_slovar(self):
@@ -143,13 +143,6 @@ class Predmet:
 
     def opravil_predmet(self):
         self.opravljen = True
-    
-    def je_ocena(ocena):
-        ocena = int(ocena)
-        if ocena >= 1 and ocena <= 10:
-            return True
-        else:
-            return False
 
     def v_slovar(self):
         return {

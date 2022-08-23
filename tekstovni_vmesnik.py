@@ -5,8 +5,6 @@ IME_DATOTEKE = "stanje.json"
 try:
     moje_stanje = Stanje.preberi_iz_datoteke(IME_DATOTEKE)
 except FileNotFoundError:   
-    #prej je delalo z FileNotFoundError zdej pa dela, ValueError
-    #to sm pogooglala pa sem dobile na https://stackoverflow.com/questions/8381193/handle-json-decode-error-when-nothing-returned (nevem zakaj)
     moje_stanje = Stanje(semestri=[])
 
 DODAJ_SEMESTER = 1
@@ -14,7 +12,6 @@ POBRISI_SEMESTER = 2
 DODAJ_PREDMET = 3
 POBRISI_PREDMET = 4
 IZHOD = 5
-
 
 def preberi_stevilo():
     while True:
@@ -99,6 +96,14 @@ def dodaj_predmet():
         kreditne_tocke = input("Krednitne točke> ")
         ocena_vaj = input("Ocena vaj> ")
         ocena_teo = input("Ocena teorije> ")
+        if ocena_vaj.isdigit():
+            ocena_vaj = int(ocena_vaj)
+        else:
+            ocena_vaj = ''
+        if ocena_teo.isdigit():
+            ocena_teo = int(ocena_teo)
+        else:
+            ocena_teo = ''    
         nov_predmet = Predmet(ime_predmeta, predavatelj, asistent, kreditne_tocke,  ocena_vaj, ocena_teo)
         semester.dodaj_predmet(nov_predmet)
 
