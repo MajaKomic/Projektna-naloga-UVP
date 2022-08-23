@@ -1,14 +1,6 @@
 import bottle
 from model import Stanje, Semester, Predmet
 
-#IME_DATOTEKE = "primer_stanja.json"
-#try:
-#    moje_stanje = Stanje.preberi_iz_datoteke(IME_DATOTEKE)
-#except FileNotFoundError:
-#    moje_stanje = Stanje(semestri=[])
-#except ValueError:
-#    moje_stanje = Stanje(semestri=[])
-
 def url_semestra(id_semestra):
     return f"/semester/{id_semestra}/"
 
@@ -22,13 +14,11 @@ def stanje_trenutnega_uporabnika():
     uporabnisko_ime = bottle.request.get_cookie("uporabnisko_ime", secret=SIFRIRNI_KLJUC)
     if uporabnisko_ime == None:
         bottle.redirect("/prijava/")
-    else:
-        uporabnisko_ime = uporabnisko_ime
     ime_datoteke = ime_uporabnikove_datoteke(uporabnisko_ime)
     try:
-        moje_stanje = Stanje.preberi_iz_datoteke(ime_datoteke)
+        moje_stanje = Stanje([]).preberi_iz_datoteke(ime_datoteke)
     except FileNotFoundError:
-        moje_stanje = Stanje.preberi_iz_datoteke("primer_stanja.json")
+        moje_stanje = Stanje(semestri=[])
         moje_stanje.shrani_v_datoteko(ime_datoteke)
     return moje_stanje
 
@@ -47,7 +37,6 @@ def prijava_get():
 @bottle.post("/prijava/")
 def prijava_post():
     uporabnisko_ime = bottle.request.forms.getunicode("uporabnisko_ime")
-    geslo = bottle.request.forms.getunicode("geslo")
     bottle.response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/", secret=SIFRIRNI_KLJUC)
     bottle.redirect("/")
 
